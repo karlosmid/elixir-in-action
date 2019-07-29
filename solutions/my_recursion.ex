@@ -1,14 +1,17 @@
 defmodule ElixirInAction.Recursion.Range do
-  def int(from, to) when is_integer(from) == :false or is_integer(to) == :false, do: "from and to must be integer."
-  def int(from, to) when from == to, do: [from]
-  def int(from, to) when to < from, do: []
-  @spec int(integer(), integer()) :: list(integer())
-  def int(from, to) do
-    do_int(from+1, to, [from])
+  def int(from, to, _) when is_integer(from) == :false or is_integer(to) == :false, do: "from and to must be integer."
+  def int(from, to, _) when from == to, do: [from]
+  def int(from, to, _) when to < from, do: []
+  @spec int(integer(), integer(), atom()) :: list(integer())
+  def int(from, to, :true) do
+    do_int_tail(from+1, to, [from])
   end
-  defp do_int(from, to, range) when from == to, do: [from|range] |> Enum.reverse()
-  defp do_int(from, to, range) do
-    do_int(from+1, to, [from|range])  
+  def int(from, to, :false) do
+    [from] ++ int(from+1, to, :false) 
+  end
+  defp do_int_tail(from, to, range) when from == to, do: [from|range] |> Enum.reverse()
+  defp do_int_tail(from, to, range) do
+    do_int_tail(from+1, to, [from|range])  
   end
 end
 defmodule ElixirInAction.Recursion.Len do
