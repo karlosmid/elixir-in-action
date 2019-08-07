@@ -24,6 +24,9 @@ defmodule TodoList do
         %TodoList{todo_list | entries: new_entries}
     end
   end
+  def delete_entry(todo_list, entry_id) do
+    Map.delete(todo_list.entries, entry_id)
+  end
 end
 defmodule MultiDict do
   def new, do: %{}
