@@ -1,6 +1,11 @@
 defmodule TodoList do
   defstruct auto_id: 1, entries: %{}
-  def new, do: %TodoList{}
+  def new(entries \\ []) do
+    Enum.reduce(entries,
+                %TodoList{},
+                &add_entry(&2, &1)
+    )
+  end
   def add_entry(todo_list, entry) do
     entry = Map.put(entry, :id, todo_list.auto_id)
     new_entries = Map.put(todo_list.entries, todo_list.auto_id, entry)
@@ -26,6 +31,13 @@ defmodule TodoList do
   end
   def delete_entry(todo_list, entry_id) do
     Map.delete(todo_list.entries, entry_id)
+  end
+  def build_entries() do
+    [
+      %{date: ~D[2019-08-06], title: "Dentist"},
+      %{date: ~D[2019-08-07], title: "Shopping"},
+      %{date: ~D[2019-08-06], title: "Movies"},
+    ]
   end
 end
 defmodule MultiDict do
