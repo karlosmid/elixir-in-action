@@ -40,6 +40,27 @@ defmodule TodoList do
     ]
   end
 end
+defmodule TodoList.CsvImporter do
+  def import(path) do
+    path
+    |> File.stream!
+    |> Stream.map(&String.replace(&1, "\n", ""))
+    |> Enum.map(&parse_csv_line/1)
+    |> TodoList.new
+  end
+  defp parse_csv_line(line) do
+    splits = line
+    |> String.replace("\n", "")
+    |> String.split(",")
+    date_list =
+    Enum.at(splits, 0)
+    |> String.split("-")
+    |> Enum.map(&String.to_integer/1)
+    date =
+    Date.new(Enum.at(date_list, 0), Enum.at(date_list, 1), Enum.at(date_list, 2))
+    %{date: date, title: Enum.at(splits, 1)}
+  end
+end
 defmodule MultiDict do
   def new, do: %{}
   def add(dict, key, value) do
