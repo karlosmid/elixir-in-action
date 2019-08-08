@@ -47,6 +47,16 @@ defmodule TodoList do
       "%{ #{elem(entry,0)}, %{ id: #{elem(entry, 1).id},date: #{elem(entry, 1).date}, title: #{elem(entry,1).title} } }"
     end
   end
+  defimpl Collectable, for: TodoList do
+    def into(original) do
+      {original, &into_callback/2}
+    end
+    defp into_callback(todolist, {:cont, entry}) do
+      TodoList.add_entry(todolist, entry)
+    end
+    defp into_callback(todolist, :done), do: todolist
+    defp into_callback(_, :halt), do: :ok
+  end
 end
 defmodule TodoList.CsvImporter do
   def import(path) do
