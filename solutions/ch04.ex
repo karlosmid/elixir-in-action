@@ -39,6 +39,14 @@ defmodule TodoList do
       %{date: ~D[2019-08-06], title: "Movies"},
     ]
   end
+  defimpl String.Chars, for: TodoList do
+    def to_string(todo) do
+      "%TodoList{ auto_id: #{todo.auto_id}, entries: [ #{todo.entries |> Stream.map(&entry_to_string/1) |> Enum.join(", ")} ]"
+    end
+    defp entry_to_string(entry) do
+      "%{ #{elem(entry,0)}, %{ id: #{elem(entry, 1).id},date: #{elem(entry, 1).date}, title: #{elem(entry,1).title} } }"
+    end
+  end
 end
 defmodule TodoList.CsvImporter do
   def import(path) do
